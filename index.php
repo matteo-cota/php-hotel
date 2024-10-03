@@ -50,10 +50,16 @@
         ]
     ];
     ?>
+    <h1 class="text-center">Hotel</h1>
     <div class="container">
         <?php
+        // Filtro parcheggio
         $filter_parking = isset($_GET['parking']) ? $_GET['parking'] : '';
+        // Filtro voto minimo
+        $filter_vote = isset($_GET['vote']) ? $_GET['vote'] : 0;
         ?>
+
+        <!-- Tabella degli hotel -->
         <table class="table table-bordered">
             <thead>
                 <tr>
@@ -67,7 +73,12 @@
             <tbody>
                 <?php
                 foreach ($hotels as $hotel) {
+                    // Applica il filtro parcheggio
                     if ($filter_parking && !$hotel['parking']) {
+                        continue;
+                    }
+                    // Applica il filtro voto minimo
+                    if ($filter_vote > 0 && $hotel['vote'] < $filter_vote) {
                         continue;
                     }
                     echo "<tr>";
@@ -81,12 +92,17 @@
                 ?>
             </tbody>
         </table>
-
+        <!-- Form per il filtro -->
         <form method="GET" class="mb-4 filter">
             <div class="form-check">
                 <input class="form-check-input" type="checkbox" name="parking" id="parking" value="1"
                     <?php if ($filter_parking) echo 'checked'; ?>>
                 <label class="form-check-label" for="parking">Solo hotel con parcheggio</label>
+            </div>
+            <div class="mb-3">
+                <label for="vote" class="form-label">Voto minimo</label>
+                <input type="number" class="form-control" id="vote" name="vote" min="1" max="5"
+                    value="<?php echo $filter_vote; ?>">
             </div>
             <button type="submit" class="btn btn-primary">Filtra</button>
         </form>
