@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
     <title>PHP Hotel</title>
 </head>
 
@@ -49,8 +50,10 @@
         ]
     ];
     ?>
-    <div class="container my-4">
-        <h1 class="mb-4 text-center">Lista Hotel</h1>
+    <div class="container">
+        <?php
+        $filter_parking = isset($_GET['parking']) ? $_GET['parking'] : '';
+        ?>
         <table class="table table-bordered">
             <thead>
                 <tr>
@@ -64,6 +67,9 @@
             <tbody>
                 <?php
                 foreach ($hotels as $hotel) {
+                    if ($filter_parking && !$hotel['parking']) {
+                        continue;
+                    }
                     echo "<tr>";
                     echo "<td>{$hotel['name']}</td>";
                     echo "<td>{$hotel['description']}</td>";
@@ -75,9 +81,16 @@
                 ?>
             </tbody>
         </table>
+
+        <form method="GET" class="mb-4 filter">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="parking" id="parking" value="1"
+                    <?php if ($filter_parking) echo 'checked'; ?>>
+                <label class="form-check-label" for="parking">Solo hotel con parcheggio</label>
+            </div>
+            <button type="submit" class="btn btn-primary">Filtra</button>
+        </form>
     </div>
-
-
 </body>
 
 </html>
